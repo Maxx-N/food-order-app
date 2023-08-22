@@ -41,7 +41,7 @@ const Cart = ({ onCloseCart }) => {
       </ul>
       <div className={styles.total}>
         <span>Total Price</span>
-        <span>${cartCtx.totalPrice}</span>
+        <span>${cartCtx.totalPrice.toFixed(2)}</span>
       </div>
       <div className={styles.actions}>
         <button className={styles['button--alt']} onClick={onCloseCart}>
