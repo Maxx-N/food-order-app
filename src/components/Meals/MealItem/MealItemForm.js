@@ -12,6 +12,9 @@ const MealItemForm = ({ mealId, onAddItem }) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    if (amount <= 0) {
+      return;
+    }
     onAddItem(amount);
   };
 
