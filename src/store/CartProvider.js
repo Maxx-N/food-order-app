@@ -1,38 +1,57 @@
-import { useState } from 'react';
+import { useReducer } from 'react';
 
 import CartContext from './cart-context';
+import { type } from '@testing-library/user-event/dist/type';
 
-const INITIAL_CART = {
-  items: [
-    {
-      id: 'm1',
-      name: 'Sushi',
-      description: 'Finest fish and veggies',
-      price: 22.99,
-      amount: 2,
-    },
-    {
-      id: 'm2',
-      name: 'Schnitzel',
-      description: 'A german specialty!',
-      price: 16.5,
-      amount: 3,
-    },
-    {
-      id: 'm3',
-      name: 'Barbecue Burger',
-      description: 'American, raw, meaty',
-      price: 12.99,
-      amount: 4,
-    },
-  ],
+const defaultCartState = {
+  items: [],
   totalPrice: 0,
 };
 
-const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState(INITIAL_CART);
+const cartReducer = (state, action) => {
+  if (action.type === 'ADD') {
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.item.id
+    );
+    const existingItem = state.items[existingItemIndex];
 
-  return <CartContext.Provider value={cart}>{children}</CartContext.Provider>;
+    const newState = { ...state };
+    if (!!existingItem) {
+      const updatedItem = {
+        ...existingItem,
+        amount: existingItem.amount + action.item.amount,
+      };
+      newState.items[existingItemIndex] = updatedItem;
+    } else {
+      newState.items.push(action.item);
+    }
+
+    const newTotalPrice =
+      state.totalPrice + action.item.price * action.item.amount;
+    newState.totalPrice = +newTotalPrice.toFixed(2);
+    return newState;
+  }
+};
+
+const CartProvider = ({ children }) => {
+  const [cartState, dispatchCartAction] = useReducer(
+    cartReducer,
+    defaultCartState
+  );
+
+  const addItemToCartHandler = (item) => {
+    dispatchCartAction({ type: 'ADD', item });
+  };
+
+  const cartCtx = {
+    items: cartState.items,
+    totalPrice: cartState.totalPrice,
+    addItem: addItemToCartHandler,
+  };
+
+  return (
+    <CartContext.Provider value={cartCtx}>{children}</CartContext.Provider>
+  );
 };
 
 export default CartProvider;

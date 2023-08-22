@@ -1,10 +1,29 @@
-import Input from '../../UI/Input';
-import styles from './MealItemForm.module.css';
+import { useState } from 'react';
 
-const MealItemForm = ({ mealId }) => {
+import styles from './MealItemForm.module.css';
+import Input from '../../UI/Input';
+
+const MealItemForm = ({ mealId, onAddItem }) => {
+  const [amount, setAmount] = useState(0);
+
+  const changeAmountHandler = (event) => {
+    setAmount(+event.target.value);
+  };
+
+  const submitHandler = (event) => {
+    event.preventDefault();
+    onAddItem(amount);
+  };
+
   return (
-    <form className={styles.form}>
-      <Input id={`input${mealId}`} label="Amount" type="number" />
+    <form className={styles.form} onSubmit={submitHandler}>
+      <Input
+        id={`input${mealId}`}
+        label="Amount"
+        type="number"
+        min={1}
+        onChange={changeAmountHandler}
+      />
       <button>+ Add</button>
     </form>
   );

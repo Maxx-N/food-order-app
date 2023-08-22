@@ -16,7 +16,7 @@ const HeaderCartButton = ({ onOpenCart }) => {
       <span className={styles.badge}>
         {cartCtx.items
           .map((item) => item.amount)
-          .reduce((prev, curr) => prev + curr)}
+          .reduce((prev, curr) => prev + curr, 0)}
       </span>
     </button>
   );
