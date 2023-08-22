@@ -4,7 +4,7 @@ import styles from './MealItemForm.module.css';
 import Input from '../../UI/Input';
 
 const MealItemForm = ({ mealId, onAddItem }) => {
-  const [amount, setAmount] = useState(0);
+  const [amount, setAmount] = useState(1);
 
   const changeAmountHandler = (event) => {
     setAmount(+event.target.value);
@@ -24,7 +24,8 @@ const MealItemForm = ({ mealId, onAddItem }) => {
         id={`input${mealId}`}
         label="Amount"
         type="number"
-        min={1}
+        min="1"
+        value={amount}
         onChange={changeAmountHandler}
       />
       <button>+ Add</button>
