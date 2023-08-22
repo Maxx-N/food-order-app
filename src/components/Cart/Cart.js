@@ -16,6 +16,10 @@ const Cart = ({ onCloseCart }) => {
     cartCtx.removeItem(id);
   };
 
+  const orderHandler = () => {
+    console.log('Ordering...');
+  };
+
   return (
     <Modal onCloseModal={onCloseCart}>
       <ul className={styles['cart-items']}>
@@ -43,7 +47,9 @@ const Cart = ({ onCloseCart }) => {
         <button className={styles['button--alt']} onClick={onCloseCart}>
           Close
         </button>
-        <button className={styles.button}>Order</button>
+        <button className={styles.button} onClick={orderHandler}>
+          Order
+        </button>
       </div>
     </Modal>
   );
