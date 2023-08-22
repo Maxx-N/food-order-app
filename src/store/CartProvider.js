@@ -9,26 +9,47 @@ const defaultCartState = {
 
 const cartReducer = (state, action) => {
   if (action.type === 'ADD') {
+    const updatedState = { ...state };
+
     const existingItemIndex = state.items.findIndex(
       (item) => item.id === action.item.id
     );
     const existingItem = state.items[existingItemIndex];
-
-    const newState = { ...state };
     if (!!existingItem) {
       const updatedItem = {
         ...existingItem,
         amount: existingItem.amount + action.item.amount,
       };
-      newState.items[existingItemIndex] = updatedItem;
+      updatedState.items[existingItemIndex] = updatedItem;
     } else {
-      newState.items.push(action.item);
+      updatedState.items.push(action.item);
     }
 
-    const newTotalPrice =
+    const updatedTotalPrice =
       state.totalPrice + action.item.price * action.item.amount;
-    newState.totalPrice = +newTotalPrice.toFixed(2);
-    return newState;
+    updatedState.totalPrice = +updatedTotalPrice.toFixed(2);
+
+    return updatedState;
+  }
+
+  if (action.type === 'REMOVE') {
+    const updatedState = { ...state };
+
+    const existingItemIndex = state.items.findIndex(
+      (item) => item.id === action.id
+    );
+    const existingItem = state.items[existingItemIndex];
+    if (existingItem.amount === 1) {
+      updatedState.items = state.items.filter((item) => item.id !== action.id);
+    } else {
+      const updatedItem = { ...existingItem, amount: existingItem.amount - 1 };
+      updatedState.items[existingItemIndex] = updatedItem;
+    }
+
+    const updatedTotalPrice = state.totalPrice - existingItem.price;
+    updatedState.totalPrice = +updatedTotalPrice.toFixed(2);
+
+    return updatedState;
   }
 };
 
@@ -42,10 +63,15 @@ const CartProvider = ({ children }) => {
     dispatchCartAction({ type: 'ADD', item });
   };
 
+  const removeItemHandler = (id) => {
+    dispatchCartAction({ type: 'REMOVE', id });
+  };
+
   const cartCtx = {
     items: cartState.items,
     totalPrice: cartState.totalPrice,
     addItem: addItemToCartHandler,
+    removeItem: removeItemHandler,
   };
 
   return (

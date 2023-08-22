@@ -12,6 +12,10 @@ const Cart = ({ onCloseCart }) => {
     cartCtx.addItem({ ...item, amount: 1 });
   };
 
+  const removeItemHandler = (id) => {
+    cartCtx.removeItem(id);
+  };
+
   return (
     <Modal onCloseModal={onCloseCart}>
       <ul className={styles['cart-items']}>
@@ -26,6 +30,7 @@ const Cart = ({ onCloseCart }) => {
               onAdd={() => {
                 addItemHandler(item);
               }}
+              onRemove={() => removeItemHandler(item.id)}
             />
           );
         })}

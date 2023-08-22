@@ -1,6 +1,6 @@
 import styles from './CartItem.module.css';
 
-const CartItem = ({ name, price, amount, onAdd }) => {
+const CartItem = ({ name, price, amount, onAdd, onRemove }) => {
   return (
     <li className={styles['cart-item']}>
       <div>
@@ -11,7 +11,7 @@ const CartItem = ({ name, price, amount, onAdd }) => {
         </div>
       </div>
       <div className={styles.actions}>
-        <button>-</button>
+        <button onClick={onRemove}>-</button>
         <button onClick={onAdd}>+</button>
       </div>
     </li>
