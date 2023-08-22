@@ -1,7 +1,6 @@
 import { useReducer } from 'react';
 
 import CartContext from './cart-context';
-import { type } from '@testing-library/user-event/dist/type';
 
 const defaultCartState = {
   items: [],

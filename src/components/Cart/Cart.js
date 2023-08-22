@@ -8,6 +8,10 @@ import CartItem from './CartItem';
 const Cart = ({ onCloseCart }) => {
   const cartCtx = useContext(CartContext);
 
+  const addItemHandler = (item) => {
+    cartCtx.addItem({ ...item, amount: 1 });
+  };
+
   return (
     <Modal onCloseModal={onCloseCart}>
       <ul className={styles['cart-items']}>
@@ -19,6 +23,9 @@ const Cart = ({ onCloseCart }) => {
               name={item.name}
               price={item.price}
               amount={item.amount}
+              onAdd={() => {
+                addItemHandler(item);
+              }}
             />
           );
         })}
