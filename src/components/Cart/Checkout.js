@@ -9,7 +9,7 @@ const has5Characters = (value) => {
   return value.length === 5;
 };
 
-const Checkout = ({ onCancel }) => {
+const Checkout = ({ onCancel, onConfirm }) => {
   const {
     value: nameValue,
     isValid: nameIsValid,
@@ -48,6 +48,15 @@ const Checkout = ({ onCancel }) => {
 
   const submitHandler = (event) => {
     event.preventDefault();
+    if (!isFormValid) {
+      return;
+    }
+    onConfirm({
+      name: nameValue,
+      street: streetValue,
+      postalCode: postalValue,
+      city: cityValue,
+    });
   };
 
   return (
@@ -62,7 +71,9 @@ const Checkout = ({ onCancel }) => {
           onBlur={nameBlurHandler}
         />
         {nameHasError && (
-          <div className={styles['error-message']}>Please enter a valid name</div>
+          <div className={styles['error-message']}>
+            Please enter a valid name
+          </div>
         )}
       </div>
       <div className={streetControlClasses}>
@@ -75,7 +86,9 @@ const Checkout = ({ onCancel }) => {
           onBlur={streetBlurHandler}
         />
         {streetHasError && (
-          <div className={styles['error-message']}>Please enter a valid street</div>
+          <div className={styles['error-message']}>
+            Please enter a valid street
+          </div>
         )}
       </div>
       <div className={postalControlClasses}>
@@ -103,7 +116,9 @@ const Checkout = ({ onCancel }) => {
           onBlur={cityBlurHandler}
         />
         {cityHasError && (
-          <div className={styles['error-message']}>Please enter a valid city</div>
+          <div className={styles['error-message']}>
+            Please enter a valid city
+          </div>
         )}
       </div>
       <div className={styles.actions}>

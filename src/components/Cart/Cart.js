@@ -26,6 +26,11 @@ const Cart = ({ onCloseCart }) => {
     setIsOrdering(false);
   };
 
+  const submitOrderHandler = (userInfo) => {
+    console.log(userInfo);
+    setIsOrdering(false);
+  };
+
   return (
     <Modal onCloseModal={onCloseCart}>
       <ul className={styles['cart-items']}>
@@ -49,7 +54,12 @@ const Cart = ({ onCloseCart }) => {
         <span>Total Price</span>
         <span>${cartCtx.totalPrice.toFixed(2)}</span>
       </div>
-      {isOrdering && <Checkout onCancel={cancelHandler} />}
+      {isOrdering && (
+        <Checkout
+          onConfirm={(userInfo) => submitOrderHandler(userInfo)}
+          onCancel={cancelHandler}
+        />
+      )}
       {!isOrdering && (
         <div className={styles.actions}>
           <button className={styles['button--alt']} onClick={onCloseCart}>
