@@ -14,7 +14,7 @@ const AvailableMeals = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchMeals = async () => {
       try {
         setIsLoading(true);
         const response = await fetch(`${API_URL}/meals.json`);
@@ -38,7 +38,7 @@ const AvailableMeals = () => {
       }
     };
 
-    fetchData();
+    fetchMeals();
   }, []);
 
   let content;
