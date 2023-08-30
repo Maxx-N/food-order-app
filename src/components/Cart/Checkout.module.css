@@ -22,6 +22,10 @@
   max-width: 100%;
 }
 
+.control .error-message {
+  color: #aa0b20;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -52,6 +56,11 @@
 .actions .submit:hover,
 .actions .submit:active {
   background-color: #7a2706;
+}
+
+.actions .submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .invalid label {
