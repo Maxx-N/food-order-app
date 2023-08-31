@@ -29,12 +29,12 @@ const Cart = ({ onCloseCart }) => {
 
   const submitOrderHandler = async (userInfo) => {
     const order = {
-      user: userInfo,
+      customer: userInfo,
       cart: cartCtx.items,
     };
 
     try {
-      const response = await fetch(`${API_URL}/orders.jso`, {
+      const response = await fetch(`${API_URL}/orders.json`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,11 @@ const Cart = ({ onCloseCart }) => {
           <button className={styles['button--alt']} onClick={onCloseCart}>
             Close
           </button>
-          <button className={styles.button} onClick={orderHandler}>
+          <button
+            className={styles.button}
+            onClick={orderHandler}
+            disabled={cartCtx.totalPrice === 0}
+          >
             Order
           </button>
         </div>

@@ -42,8 +42,8 @@
   padding: 0.5rem 2rem;
 }
 
-.actions button:hover,
-.actions button:active {
+.actions button:hover:not(:disabled),
+.actions button:active:not(:disabled) {
   background-color: #ffe6dc;
 }
 
@@ -53,8 +53,8 @@
   color: white;
 }
 
-.actions .submit:hover,
-.actions .submit:active {
+.actions .submit:hover:not(:disabled),
+.actions .submit:active:not(:disabled) {
   background-color: #7a2706;
 }
 

@@ -29,8 +29,8 @@
   margin-left: 1rem;
 }
 
-.actions button:hover,
-.actions button:active {
+.actions button:hover:not(:disabled),
+.actions button:active:not(:disabled) {
   background-color: #5a1a01;
   border-color: #5a1a01;
   color: white;
@@ -43,4 +43,9 @@
 .actions .button {
   background-color: #8a2b06;
   color: white;
+}
+
+.actions .button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
