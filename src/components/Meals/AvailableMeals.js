@@ -1,43 +1,36 @@
-import { useState } from 'react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import styles from './AvailableMeals.module.css';
-import { API_URL } from '../../assets/variables';
+import useHttp from '../../hooks/use-http';
 import Card from '../UI/Card';
+import styles from './AvailableMeals.module.css';
 import MealItem from './MealItem/MealItem';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+
+  const transformDataAndSetMeals = useCallback((data) => {
+    const transformedData = Object.keys(data).map((key) => {
+      return {
+        id: key,
+        ...data[key],
+      };
+    });
+    setMeals(transformedData);
+  }, []);
+
+  const {
+    isLoading,
+    error,
+    sendRequest: fetchMeals,
+  } = useHttp({
+    endPoint: 'meals',
+    errorMessage: 'Fetching data failed.',
+    responseOkFn: transformDataAndSetMeals,
+  });
 
   useEffect(() => {
-    const fetchMeals = async () => {
-      try {
-        setIsLoading(true);
-        const response = await fetch(`${API_URL}/meals.json`);
-        if (!response.ok) {
-          throw Error('Fetching data failed.');
-        }
-        const data = await response.json();
-        const transformedData = Object.keys(data).map((key) => {
-          return {
-            id: key,
-            ...data[key],
-          };
-        });
-        setMeals(transformedData);
-      } catch (err) {
-        setError(
-          `Error: ${!!err.message ? err.message : 'Something went wrong.'}`
-        );
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchMeals();
-  }, []);
+  }, [fetchMeals]);
 
   let content;
   if (isLoading) {
