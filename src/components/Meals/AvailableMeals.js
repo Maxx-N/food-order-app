@@ -2,11 +2,9 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 
 import styles from './AvailableMeals.module.css';
+import { API_URL } from '../../assets/variables';
 import Card from '../UI/Card';
 import MealItem from './MealItem/MealItem';
-
-const API_URL =
-  'https://react-movies-e46e6-default-rtdb.europe-west1.firebasedatabase.app';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);

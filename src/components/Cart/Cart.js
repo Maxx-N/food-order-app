@@ -1,6 +1,7 @@
 import { useContext, useState } from 'react';
 
 import styles from './Cart.module.css';
+import { API_URL } from '../../assets/variables';
 import CartContext from '../../store/cart-context';
 import Modal from '../UI/Modal';
 import CartItem from './CartItem';
@@ -26,8 +27,29 @@ const Cart = ({ onCloseCart }) => {
     setIsOrdering(false);
   };
 
-  const submitOrderHandler = (userInfo) => {
-    console.log(userInfo);
+  const submitOrderHandler = async (userInfo) => {
+    const order = {
+      user: userInfo,
+      cart: cartCtx.items,
+    };
+
+    try {
+      const response = await fetch(`${API_URL}/orders.jso`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(order),
+      });
+      if (!response.ok) {
+        throw Error('Sending order to the server failed.');
+      }
+    } catch (err) {
+      let error = 'Error: ';
+      error += !!err.message ? err.message : 'Something went wrong.';
+      console.log(error);
+    }
+
     setIsOrdering(false);
   };
 
