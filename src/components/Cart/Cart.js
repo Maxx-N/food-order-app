@@ -44,6 +44,7 @@ const Cart = ({ onCloseCart }) => {
       if (!response.ok) {
         throw Error('Sending order to the server failed.');
       }
+      cartCtx.resetCart();
     } catch (err) {
       let error = 'Error: ';
       error += !!err.message ? err.message : 'Something went wrong.';
