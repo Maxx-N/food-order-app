@@ -1,18 +1,27 @@
 import { useContext, useState } from 'react';
 
-import styles from './Cart.module.css';
-import { API_URL } from '../../assets/variables';
+import useHttp from '../../hooks/use-http';
 import CartContext from '../../store/cart-context';
 import Modal from '../UI/Modal';
+import styles from './Cart.module.css';
 import CartItem from './CartItem';
 import Checkout from './Checkout';
 
 const Cart = ({ onCloseCart }) => {
   const cartCtx = useContext(CartContext);
   const [isOrdering, setIsOrdering] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [isSent, setIsSent] = useState(false);
+
+  const { isLoading, error, sendRequest } = useHttp({
+    endPoint: 'orders',
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    errorMessage: 'Sending order to the server failed.',
+    responseOkFn: () => {
+      setIsSent(true);
+      cartCtx.resetCart();
+    },
+  });
 
   const addItemHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
@@ -36,27 +45,7 @@ const Cart = ({ onCloseCart }) => {
       cart: cartCtx.items,
     };
 
-    try {
-      setIsLoading(true);
-      const response = await fetch(`${API_URL}/orders.json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(order),
-      });
-      if (!response.ok) {
-        throw Error('Sending order to the server failed.');
-      }
-      setIsSent(true);
-      cartCtx.resetCart();
-    } catch (err) {
-      let error = 'Error: ';
-      error += !!err.message ? err.message : 'Something went wrong.';
-      setError(error);
-    } finally {
-      setIsLoading(false);
-    }
+    sendRequest(order);
 
     setIsOrdering(false);
   };
