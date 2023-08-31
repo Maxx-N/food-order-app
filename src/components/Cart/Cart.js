@@ -50,7 +50,7 @@ const Cart = ({ onCloseCart }) => {
     setIsOrdering(false);
   };
 
-  let actionButtons = (
+  const actionButtons = (
     <div className={styles.actions}>
       <button className={styles['button--alt']} onClick={onCloseCart}>
         Close
