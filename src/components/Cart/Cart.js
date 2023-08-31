@@ -10,6 +10,9 @@ import Checkout from './Checkout';
 const Cart = ({ onCloseCart }) => {
   const cartCtx = useContext(CartContext);
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [isSent, setIsSent] = useState(false);
 
   const addItemHandler = (item) => {
     cartCtx.addItem({ ...item, amount: 1 });
@@ -34,6 +37,7 @@ const Cart = ({ onCloseCart }) => {
     };
 
     try {
+      setIsLoading(true);
       const response = await fetch(`${API_URL}/orders.json`, {
         method: 'POST',
         headers: {
@@ -44,18 +48,38 @@ const Cart = ({ onCloseCart }) => {
       if (!response.ok) {
         throw Error('Sending order to the server failed.');
       }
+      setIsSent(true);
       cartCtx.resetCart();
     } catch (err) {
       let error = 'Error: ';
       error += !!err.message ? err.message : 'Something went wrong.';
-      console.log(error);
+      setError(error);
+    } finally {
+      setIsLoading(false);
     }
 
     setIsOrdering(false);
   };
 
-  return (
-    <Modal onCloseModal={onCloseCart}>
+  let actionButtons = (
+    <div className={styles.actions}>
+      <button className={styles['button--alt']} onClick={onCloseCart}>
+        Close
+      </button>
+      {!isLoading && !error && !isSent && (
+        <button
+          className={styles.button}
+          onClick={orderHandler}
+          disabled={cartCtx.totalPrice === 0}
+        >
+          Order
+        </button>
+      )}
+    </div>
+  );
+
+  let content = (
+    <>
       <ul className={styles['cart-items']}>
         {' '}
         {cartCtx.items.map((item) => {
@@ -83,20 +107,24 @@ const Cart = ({ onCloseCart }) => {
           onCancel={cancelHandler}
         />
       )}
-      {!isOrdering && (
-        <div className={styles.actions}>
-          <button className={styles['button--alt']} onClick={onCloseCart}>
-            Close
-          </button>
-          <button
-            className={styles.button}
-            onClick={orderHandler}
-            disabled={cartCtx.totalPrice === 0}
-          >
-            Order
-          </button>
-        </div>
-      )}
+    </>
+  );
+  if (isLoading) {
+    content = <p className={styles['loading-message']}>Sending order...</p>;
+  } else if (!!error) {
+    content = <p className={styles['error-message']}>{error}</p>;
+  } else if (isSent) {
+    content = (
+      <p className={styles['success-message']}>
+        Your order has been successfully sent!
+      </p>
+    );
+  }
+
+  return (
+    <Modal onCloseModal={onCloseCart}>
+      {content}
+      {!isOrdering && actionButtons}
     </Modal>
   );
 };

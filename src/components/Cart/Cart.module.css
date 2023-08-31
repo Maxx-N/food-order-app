@@ -49,3 +49,15 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.loading-message {
+  color: rgb(36, 36, 191);
+}
+
+.error-message {
+  color: #ca3e51;
+}
+
+.success-message {
+  color: rgb(12, 183, 12);
+}
